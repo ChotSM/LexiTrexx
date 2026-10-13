@@ -348,4 +348,473 @@
         function sfxCorrect() { playTone(523.25, 'sine', 0.12, 0); playTone(659.25, 'sine', 0.12, 100); playTone(783.99, 'sine', 0.25, 200); }
         function sfxWrong() { playTone(220, 'sawtooth', 0.18, 0); playTone(180, 'sawtooth', 0.25, 150); }
         function sfxHop() { playTone(440, 'triangle', 0.08, 0); }
-        function sfxEpicLevelUp() { playTone(523.25, 'triangle', 0.15, 0); playTone(
+        function sfxEpicLevelUp() { playTone(523.25, 'triangle', 0.15, 0); playTone(659.25, 'triangle', 0.15, 150); playTone(783.99, 'triangle', 0.15, 300); playTone(1046.50, 'sawtooth', 0.8, 450); }
+
+        const offlineArt = {
+            classroom: `<svg viewBox="0 0 400 200" width="100%" height="100%"><rect width="400" height="200" fill="#DBEAFE"/><rect x="80" y="30" width="240" height="110" rx="6" fill="#065F46" stroke="#D97706" stroke-width="8"/><text x="200" y="75" font-size="22" fill="white" text-anchor="middle" font-weight="bold">CLASSROOM</text></svg>`,
+            subject: `<svg viewBox="0 0 400 200" width="100%" height="100%"><rect width="400" height="200" fill="#E0E7FF"/><rect x="110" y="40" width="80" height="110" rx="6" fill="#EF4444"/><rect x="210" y="45" width="80" height="110" rx="6" fill="#3B82F6" transform="rotate(8 210 45)"/></svg>`,
+            experiment: `<svg viewBox="0 0 400 200" width="100%" height="100%"><rect width="400" height="200" fill="#EDE9FE"/><polygon points="160,155 185,75 215,75 240,155" fill="#34D399" stroke="#4F46E5" stroke-width="6"/></svg>`,
+            routine: `<svg viewBox="0 0 400 200" width="100%" height="100%"><rect width="400" height="200" fill="#FEF3C7"/><circle cx="200" cy="100" r="65" fill="white" stroke="#F59E0B" stroke-width="8"/><line x1="200" y1="100" x2="200" y2="55" stroke="#1F2937" stroke-width="6" stroke-linecap="round"/></svg>`,
+            sibling: `<svg viewBox="0 0 400 200" width="100%" height="100%"><rect width="400" height="200" fill="#FCE7F3"/><circle cx="155" cy="80" r="30" fill="#F472B6"/><circle cx="245" cy="80" r="30" fill="#60A5FA"/></svg>`,
+            schedule: `<svg viewBox="0 0 400 200" width="100%" height="100%"><rect width="400" height="200" fill="#DBEAFE"/><rect x="120" y="35" width="160" height="135" rx="10" fill="white" stroke="#3B82F6" stroke-width="6"/></svg>`,
+            tournament: `<svg viewBox="0 0 400 200" width="100%" height="100%"><rect width="400" height="200" fill="#FEF9C3"/><path d="M150 45 H250 V95 Q250 140 200 140 Q150 140 150 95 Z" fill="#F59E0B"/></svg>`,
+            leisure: `<svg viewBox="0 0 400 200" width="100%" height="100%"><rect width="400" height="200" fill="#E0F2FE"/><path d="M130 130 A70 70 0 0 1 270 130" fill="none" stroke="#4F46E5" stroke-width="14" stroke-linecap="round"/></svg>`,
+            photography: `<svg viewBox="0 0 400 200" width="100%" height="100%"><rect width="400" height="200" fill="#F3E8FF"/><rect x="120" y="60" width="160" height="100" rx="14" fill="#1F2937"/><circle cx="200" cy="110" r="32" fill="#60A5FA" stroke="white" stroke-width="6"/></svg>`,
+            journey: `<svg viewBox="0 0 400 200" width="100%" height="100%"><rect width="400" height="200" fill="#D1FAE5"/><polygon points="40,160 130,50 220,160" fill="#10B981"/><rect x="70" y="115" width="260" height="45" rx="10" fill="#EF4444"/></svg>`,
+            scenery: `<svg viewBox="0 0 400 200" width="100%" height="100%"><rect width="400" height="200" fill="#BAE6FD"/><circle cx="310" cy="55" r="28" fill="#FBBF24"/><polygon points="20,180 140,60 260,180" fill="#047857"/></svg>`,
+            passenger: `<svg viewBox="0 0 400 200" width="100%" height="100%"><rect width="400" height="200" fill="#E0E7FF"/><rect x="100" y="35" width="200" height="130" rx="16" fill="#4F46E5"/><circle cx="200" cy="85" r="18" fill="#F59E0B"/></svg>`,
+            market: `<svg viewBox="0 0 400 200" width="100%" height="100%"><rect width="400" height="200" fill="#FFEDD5"/><rect x="100" y="80" width="200" height="95" fill="#FBBF24"/><polygon points="85,80 120,40 280,40 315,80" fill="#EF4444"/></svg>`,
+            healthy: `<svg viewBox="0 0 400 200" width="100%" height="100%"><rect width="400" height="200" fill="#DCFCE7"/><path d="M120 105 Q200 185 280 105 Z" fill="#D97706"/><circle cx="165" cy="95" r="24" fill="#EF4444"/><circle cx="205" cy="90" r="26" fill="#22C55E"/></svg>`,
+            ingredient: `<svg viewBox="0 0 400 200" width="100%" height="100%"><rect width="400" height="200" fill="#FEF3C7"/><rect x="120" y="65" width="75" height="95" rx="8" fill="white" stroke="#D97706" stroke-width="5"/><text x="157" y="120" font-size="14" fill="#D97706" text-anchor="middle" font-weight="bold">FLOUR</text></svg>`
+        };
+
+        const defaultVocab = [
+            { word: "classroom", theme: "SCHOOL", def: "A room in a school where students learn.", sentence: "\"The teacher wrote the rules on the _______ whiteboard.\"", options: ["classroom", "habit", "relative", "journey"], tier: 1, mastery: 0, errors: 0, recogTries: 0, recogHits: 0, recallTries: 0, recallHits: 0, totalMs: 0 },
+            { word: "healthy", theme: "HEALTH", def: "In good physical condition; not sick.", sentence: "\"Eating fresh fruits and vegetables keeps your body _______.\"", options: ["sick", "healthy", "passenger", "leisure"], tier: 1, mastery: 0, errors: 0, recogTries: 0, recogHits: 0, recallTries: 0, recallHits: 0, totalMs: 0 },
+            { word: "market", theme: "SHOPPING", def: "An open place where people buy fresh food.", sentence: "\"We bought fresh vegetables at the Sunday _______.\"", options: ["station", "market", "project", "experiment"], tier: 1, mastery: 0, errors: 0, recogTries: 0, recogHits: 0, recallTries: 0, recallHits: 0, totalMs: 0 },
+            { word: "subject", theme: "SCHOOL", def: "An area of knowledge studied in school.", sentence: "\"English is my favourite school _______.\"", options: ["project", "subject", "scenery", "balance"], tier: 2, mastery: 0, errors: 0, recogTries: 0, recogHits: 0, recallTries: 0, recallHits: 0, totalMs: 0 },
+            { word: "routine", theme: "IDENTITY", def: "A sequence of actions regularly followed.", sentence: "\"My morning _______ includes eating breakfast at 6:30 AM.\"", options: ["routine", "journey", "market", "lesson"], tier: 2, mastery: 0, errors: 0, recogTries: 0, recogHits: 0, recallTries: 0, recallHits: 0, totalMs: 0 },
+            { word: "journey", theme: "TRAVEL", def: "An act of traveling from one place to another.", sentence: "\"The bus _______ to Kota Kinabalu took two hours.\"", options: ["market", "classroom", "journey", "appetite"], tier: 2, mastery: 0, errors: 0, recogTries: 0, recogHits: 0, recallTries: 0, recallHits: 0, totalMs: 0 },
+            { word: "sibling", theme: "IDENTITY", def: "A brother or a sister.", sentence: "\"I have one younger _______ in my family.\"", options: ["passenger", "sibling", "subject", "habit"], tier: 3, mastery: 0, errors: 0, recogTries: 0, recogHits: 0, recallTries: 0, recallHits: 0, totalMs: 0 },
+            { word: "schedule", theme: "IDENTITY", def: "A plan for carrying out activities and times.", sentence: "\"She has a busy daily _______ after school.\"", options: ["schedule", "scenery", "ingredient", "market"], tier: 3, mastery: 0, errors: 0, recogTries: 0, recogHits: 0, recallTries: 0, recallHits: 0, totalMs: 0 },
+            { word: "passenger", theme: "TRAVEL", def: "A traveler riding in a bus, train, or car.", sentence: "\"Every _______ on the bus wore a seatbelt.\"", options: ["passenger", "sibling", "teacher", "doctor"], tier: 3, mastery: 0, errors: 0, recogTries: 0, recogHits: 0, recallTries: 0, recallHits: 0, totalMs: 0 },
+            { word: "leisure", theme: "HOBBIES", def: "Free time when you are not working or studying.", sentence: "\"I enjoy listening to music during my _______ time.\"", options: ["routine", "leisure", "journey", "relative"], tier: 4, mastery: 0, errors: 0, recogTries: 0, recogHits: 0, recallTries: 0, recallHits: 0, totalMs: 0 },
+            { word: "experiment", theme: "SCHOOL", def: "A scientific test done in a laboratory to learn something.", sentence: "\"We did a fun science _______ in the lab today.\"", options: ["experiment", "timetable", "passenger", "leisure"], tier: 4, mastery: 0, errors: 0, recogTries: 0, recogHits: 0, recallTries: 0, recallHits: 0, totalMs: 0 },
+            { word: "tournament", theme: "HOBBIES", def: "A sports competition with several matches.", sentence: "\"Our school team won the district netball _______.\"", options: ["tournament", "ingredient", "environment", "schedule"], tier: 4, mastery: 0, errors: 0, recogTries: 0, recogHits: 0, recallTries: 0, recallHits: 0, totalMs: 0 },
+            { word: "scenery", theme: "TRAVEL", def: "The natural features of a beautiful landscape.", sentence: "\"The mountain _______ in Sabah is very peaceful.\"", options: ["scenery", "timetable", "cinema", "receipt"], tier: 5, mastery: 0, errors: 0, recogTries: 0, recogHits: 0, recallTries: 0, recallHits: 0, totalMs: 0 },
+            { word: "photography", theme: "HOBBIES", def: "The hobby or activity of taking pictures with a camera.", sentence: "\"He joined the nature _______ club at school.\"", options: ["photography", "experiment", "classroom", "appetite"], tier: 5, mastery: 0, errors: 0, recogTries: 0, recogHits: 0, recallTries: 0, recallHits: 0, totalMs: 0 },
+            { word: "ingredient", theme: "HEALTH", def: "One of the foods used to make a dish or recipe.", sentence: "\"Fresh chili is the main _______ in this dish.\"", options: ["ingredient", "receipt", "tournament", "schedule"], tier: 5, mastery: 0, errors: 0, recogTries: 0, recogHits: 0, recallTries: 0, recallHits: 0, totalMs: 0 }
+        ];
+
+        const vineTiles = [4, 11, 19, 25];
+        const mudTiles = [8, 16, 23, 28];
+        const campTiles = [6, 12, 18, 24];
+
+        let vocabDatabase = JSON.parse(localStorage.getItem('lt40_vocab')) || JSON.parse(JSON.stringify(defaultVocab));
+        let playerPos = parseInt(localStorage.getItem('lt40_pos')) || 1;
+        let streak = parseInt(localStorage.getItem('lt40_streak')) || 0;
+        let totalScore = parseInt(localStorage.getItem('lt40_score')) || 20;
+        let laps = parseInt(localStorage.getItem('lt40_laps')) || 1;
+        
+        // Safety Catch: Ensure hints and shields never become NaN
+        let storedHints = parseInt(localStorage.getItem('lt40_hints'));
+        let hintsOwned = isNaN(storedHints) ? 1 : storedHints;
+        let storedShields = parseInt(localStorage.getItem('lt40_shields'));
+        let shieldsOwned = isNaN(storedShields) ? 0 : storedShields;
+        
+        let studentName = localStorage.getItem('lt40_name') || "";
+        let studentAvatar = localStorage.getItem('lt40_avatar') || "🧗";
+        let activeSeconds = parseInt(localStorage.getItem('lt40_time')) || 0;
+        let badgesUnlocked = JSON.parse(localStorage.getItem('lt40_badges')) || [false, false, false, false, false];
+
+        let currentCard = null;
+        let pendingMove = 0;
+        let answered = false;
+        let cardStartTime = 0;
+        let revealedLetters = 1;
+
+        setInterval(() => {
+            if (!document.hidden) { activeSeconds++; localStorage.setItem('lt40_time', activeSeconds); }
+        }, 1000);
+
+        function renderBoard() {
+            const grid = document.getElementById('board-grid');
+            grid.innerHTML = '';
+            for (let row = 5; row >= 0; row--) {
+                let rowTiles = [];
+                for (let col = 0; col < 5; col++) rowTiles.push(row * 5 + col + 1);
+                if (row % 2 === 1) rowTiles.reverse();
+
+                rowTiles.forEach(tileNum => {
+                    const tile = document.createElement('div');
+                    tile.className = 'tile';
+                    let icon = '🐾';
+                    if (tileNum === 1) icon = '🚩';
+                    else if (tileNum === 30) { tile.classList.add('summit'); icon = '🏔️'; }
+                    else if (vineTiles.includes(tileNum)) { tile.classList.add('vine'); icon = '🌿'; }
+                    else if (mudTiles.includes(tileNum)) { tile.classList.add('mud'); icon = '🌧️'; }
+                    else if (campTiles.includes(tileNum)) { tile.classList.add('camp'); icon = '⛺'; }
+
+                    if (tileNum === playerPos) tile.classList.add('active-tile');
+                    tile.innerHTML = `<span class="tile-num">${tileNum}</span><span class="tile-icon">${icon}</span>${tileNum === playerPos ? `<div class="player-token">${studentAvatar}</div>` : ''}`;
+                    grid.appendChild(tile);
+                });
+            }
+
+            document.getElementById('nav-avatar').innerText = studentAvatar;
+            document.getElementById('nav-name').innerText = studentName || "Climber";
+            document.getElementById('streak-count').innerText = streak;
+            document.getElementById('score-count').innerText = totalScore;
+            document.getElementById('pos-display').innerText = Math.min(30, playerPos);
+            document.getElementById('lap-display').innerText = laps;
+            document.getElementById('hint-count').innerText = hintsOwned;
+            document.getElementById('shield-count').innerText = shieldsOwned;
+
+            badgesUnlocked.forEach((unlocked, idx) => {
+                const el = document.getElementById(`badge-${idx}`);
+                if (el) el.classList.toggle('unlocked', unlocked);
+            });
+
+            const zoneNames = ["Zone 1: The Foothills", "Zone 2: Lower Trail", "Zone 3: Middle Ridge", "Zone 4: Cloud Forest", "Zone 5: Rocky Summit"];
+            let zoneIdx = Math.min(4, Math.floor((playerPos - 1) / 6));
+            document.getElementById('zone-title').innerText = zoneNames[zoneIdx];
+        }
+
+        function buyGear(type) {
+            if (type === 'hint') {
+                if (totalScore >= 20) { totalScore -= 20; hintsOwned++; sfxCorrect(); saveProgress(); renderBoard(); }
+                else alert("Need 20 ⭐ Stars to buy a Torchlight Hint!");
+            } else if (type === 'shield') {
+                if (totalScore >= 30) { totalScore -= 30; shieldsOwned++; sfxCorrect(); saveProgress(); renderBoard(); }
+                else alert("Need 30 ⭐ Stars to buy Crampon Boots!");
+            }
+        }
+
+        function formatScaffold(word, revealCount) {
+            return word.split('').map((ch, i) => (i < revealCount || i === word.length - 1) ? ch.toUpperCase() : '_').join(' ') + ` (${word.length})`;
+        }
+
+        function triggerDiceChallenge() {
+            answered = false;
+            revealedLetters = 1;
+            cardStartTime = Date.now();
+
+            const currentTier = Math.min(5, Math.ceil(playerPos / 6)); 
+            let pool = vocabDatabase.filter(item => item.tier <= currentTier && item.mastery < 2);
+            if (pool.length === 0) pool = [...vocabDatabase]; 
+
+            pool.sort((a, b) => a.mastery - b.mastery || (b.errors || 0) - (a.errors || 0) || (0.5 - Math.random()));
+            currentCard = pool[0];
+
+            document.getElementById('theme-text').innerText = `${currentCard.theme} (Tier ${currentCard.tier})`;
+            document.getElementById('definition-text').innerText = currentCard.def;
+            document.getElementById('sentence-text').innerText = currentCard.sentence;
+            document.getElementById('svg-container').innerHTML = offlineArt[currentCard.word] || offlineArt['classroom'];
+            document.getElementById('feedback-area').style.display = 'none';
+            document.getElementById('modal-hint-cnt').innerText = hintsOwned;
+            document.getElementById('use-hint-btn').style.display = hintsOwned > 0 ? 'block' : 'none';
+
+            const recogMode = document.getElementById('recognition-mode');
+            const recallMode = document.getElementById('recall-mode');
+            const typingInput = document.getElementById('typing-input');
+            const modeBadge = document.getElementById('mode-indicator');
+            const stakeBadge = document.getElementById('stake-indicator');
+
+            if (currentCard.mastery === 0) {
+                modeBadge.innerText = "Step 1: Recognition";
+                modeBadge.style.background = "#DBEAFE"; modeBadge.style.color = "#1E40AF";
+                stakeBadge.innerText = "🎲 Roll 1–2 Tiles";
+                recogMode.style.display = 'grid'; recallMode.style.display = 'none'; recogMode.innerHTML = '';
+                
+                let opts = [...currentCard.options].sort(() => 0.5 - Math.random());
+                opts.forEach(opt => {
+                    const btn = document.createElement('button');
+                    btn.className = 'option-btn'; btn.innerText = opt;
+                    btn.onclick = () => checkMCQ(opt, btn, currentCard.word);
+                    recogMode.appendChild(btn);
+                });
+            } else {
+                modeBadge.innerText = "Step 2: Active Recall";
+                modeBadge.style.background = "#FEF3C7"; modeBadge.style.color = "#92400E";
+                stakeBadge.innerText = "⚡ Power Roll 2–4 Tiles!";
+                recogMode.style.display = 'none'; recallMode.style.display = 'block';
+                document.getElementById('scaffold-letters').innerText = formatScaffold(currentCard.word, revealedLetters);
+                typingInput.value = ''; typingInput.disabled = false;
+                typingInput.style.borderColor = "#D1D5DB"; typingInput.style.backgroundColor = "white";
+            }
+
+            document.getElementById('challenge-modal').classList.add('open');
+        }
+
+        function useTorchHint() {
+            if (hintsOwned <= 0 || answered) return;
+            hintsOwned--;
+            document.getElementById('modal-hint-cnt').innerText = hintsOwned;
+            if (hintsOwned <= 0) document.getElementById('use-hint-btn').style.display = 'none';
+
+            if (currentCard.mastery === 0) {
+                const buttons = Array.from(document.querySelectorAll('.option-btn'));
+                let wrongBtns = buttons.filter(b => b.innerText.toLowerCase() !== currentCard.word.toLowerCase() && !b.classList.contains('hidden-opt'));
+                wrongBtns.slice(0, 2).forEach(b => b.classList.add('hidden-opt'));
+            } else {
+                revealedLetters = Math.min(currentCard.word.length - 1, revealedLetters + 2);
+                document.getElementById('scaffold-letters').innerText = formatScaffold(currentCard.word, revealedLetters);
+            }
+            saveProgress(); renderBoard();
+        }
+
+        function checkMCQ(selectedWord, btnElement, correctWord) {
+            if (answered) return;
+            answered = true;
+            const elapsedMs = Date.now() - cardStartTime;
+
+            document.querySelectorAll('.option-btn').forEach(b => b.style.pointerEvents = 'none');
+            currentCard.recogTries = (currentCard.recogTries || 0) + 1;
+            currentCard.totalMs = (currentCard.totalMs || 0) + elapsedMs;
+
+            const isCorrect = selectedWord.toLowerCase() === correctWord.toLowerCase();
+            if (isCorrect) {
+                sfxCorrect(); btnElement.classList.add('correct');
+                currentCard.recogHits = (currentCard.recogHits || 0) + 1;
+                currentCard.mastery = 1; pendingMove = Math.floor(Math.random() * 2) + 1;
+            } else {
+                sfxWrong(); btnElement.classList.add('incorrect');
+                document.querySelectorAll('.option-btn').forEach(b => { if (b.innerText.toLowerCase() === correctWord.toLowerCase()) b.classList.add('correct'); });
+                currentCard.mastery = 0; currentCard.errors = (currentCard.errors || 0) + 1;
+                pendingMove = mudTiles.includes(playerPos) ? -1 : 0;
+            }
+            showFeedback(isCorrect, correctWord, elapsedMs);
+        }
+
+        function checkTypedAnswer() {
+            if (answered) return;
+            const inputEl = document.getElementById('typing-input');
+            if (!inputEl.value.trim()) return;
+            answered = true; inputEl.disabled = true;
+            const elapsedMs = Date.now() - cardStartTime;
+
+            currentCard.recallTries = (currentCard.recallTries || 0) + 1;
+            currentCard.totalMs = (currentCard.totalMs || 0) + elapsedMs;
+
+            const typedWord = inputEl.value.trim().toLowerCase();
+            const correctWord = currentCard.word.toLowerCase();
+            const isCorrect = typedWord === correctWord;
+
+            if (isCorrect) {
+                sfxCorrect(); inputEl.style.borderColor = "var(--correct)"; inputEl.style.backgroundColor = "#D1FAE5";
+                currentCard.recallHits = (currentCard.recallHits || 0) + 1;
+                currentCard.mastery = 2; pendingMove = Math.floor(Math.random() * 3) + 2;
+            } else {
+                sfxWrong(); inputEl.style.borderColor = "var(--incorrect)"; inputEl.style.backgroundColor = "#FEE2E2";
+                currentCard.mastery = 0; currentCard.errors = (currentCard.errors || 0) + 1;
+                pendingMove = mudTiles.includes(playerPos) ? -1 : 0;
+            }
+            showFeedback(isCorrect, correctWord, elapsedMs);
+        }
+
+        function showFeedback(isCorrect, correctWord, elapsedMs) {
+            const feedbackArea = document.getElementById('feedback-area');
+            const feedbackMessage = document.getElementById('feedback-message');
+            const sec = (elapsedMs / 1000).toFixed(1);
+
+            if (isCorrect) {
+                feedbackArea.style.backgroundColor = '#D1FAE5'; feedbackArea.style.color = '#065F46';
+                feedbackMessage.innerText = `✅ Spot on in ${sec}s! "${correctWord.toUpperCase()}" rolled +${pendingMove} tiles! (+10⭐)`;
+                streak++; totalScore += 10;
+            } else {
+                feedbackArea.style.backgroundColor = '#FEE2E2'; feedbackArea.style.color = '#991B1B';
+                let slipMsg = pendingMove === -1 ? (shieldsOwned > 0 ? "🥾 Crampons blocked the mudslide!" : "🌧️ Slipped back 1 tile.") : "Stay on current tile.";
+                feedbackMessage.innerText = `❌ Feedback: The word is "${correctWord.toUpperCase()}". ${slipMsg}`;
+                streak = 0;
+            }
+            saveProgress(); feedbackArea.style.display = 'block';
+        }
+
+        function closeModalAndMove() {
+            document.getElementById('challenge-modal').classList.remove('open');
+
+            if (pendingMove > 0) {
+                let stepsRemaining = pendingMove;
+                document.getElementById('last-roll-text').innerText = `🎲 Rolling +${pendingMove}...`;
+
+                const hopInterval = setInterval(() => {
+                    if (stepsRemaining > 0 && playerPos < 30) {
+                        playerPos++;
+                        stepsRemaining--;
+                        sfxHop();
+                        if (playerPos >= 6) badgesUnlocked[0] = true;
+                        if (playerPos >= 12) badgesUnlocked[1] = true;
+                        if (playerPos >= 18) badgesUnlocked[2] = true;
+                        if (playerPos >= 24) badgesUnlocked[3] = true;
+                        if (playerPos >= 30) badgesUnlocked[4] = true;
+                        renderBoard();
+                    } else {
+                        clearInterval(hopInterval);
+                        finalizeTileEvents();
+                    }
+                }, 260);
+            } else if (pendingMove < 0) {
+                if (shieldsOwned > 0) {
+                    shieldsOwned--; document.getElementById('last-roll-text').innerText = `🥾 Crampons saved you!`;
+                } else {
+                    playerPos = Math.max(1, playerPos - 1); document.getElementById('last-roll-text').innerText = `🌧️ Slipped back 1 tile.`;
+                }
+                saveProgress(); renderBoard();
+            } else {
+                document.getElementById('last-roll-text').innerText = `🛡️ Held position. Try again!`;
+                saveProgress(); renderBoard();
+                checkSummit(); // Safety Catch
+            }
+        }
+
+        // The Summit Catcher: Securely fires fireworks if player hits or overshoots 30
+        function checkSummit() {
+            if (playerPos >= 30) {
+                playerPos = 30; // Securely lock at 30
+                document.getElementById('last-roll-text').innerText = `🏔️ Summit Reached!`;
+                saveProgress();
+                renderBoard();
+                setTimeout(() => { triggerSummitCelebration(); }, 350);
+                return true;
+            }
+            return false;
+        }
+
+        function finalizeTileEvents() {
+            // First check if they hit the summit
+            if (checkSummit()) return;
+
+            let statusMsg = `🎲 Moved +${pendingMove} tiles!`;
+
+            if (vineTiles.includes(playerPos)) {
+                playerPos = Math.min(30, playerPos + 2);
+                totalScore += 15; sfxCorrect();
+                statusMsg = `🌿 Vine Boost! +2 Extra Tiles!`;
+                if (checkSummit()) return; // Check again in case Vine pushed them to 30
+            } else if (campTiles.includes(playerPos)) {
+                totalScore += 20; sfxCorrect();
+                statusMsg = `⛺ Base Camp! +20 Bonus ⭐!`;
+            } else if (mudTiles.includes(playerPos)) {
+                statusMsg = `🌧️ On Mudslide! Be careful!`;
+            }
+
+            document.getElementById('last-roll-text').innerText = statusMsg;
+            saveProgress();
+            renderBoard();
+        }
+
+        /* 🔥 FIREWORKS CREATOR 🔥 */
+        function triggerSummitCelebration() {
+            sfxEpicLevelUp(); 
+            document.getElementById('summit-name').innerText = studentName || 'Climber';
+            document.getElementById('next-lap-num').innerText = laps + 1;
+            document.getElementById('summit-modal').classList.add('open');
+            
+            const container = document.getElementById('fireworks-container');
+            container.innerHTML = '';
+            const colors = ['#EF4444', '#3B82F6', '#10B981', '#F59E0B', '#8B5CF6', '#EC4899', '#FFFFFF'];
+            
+            for (let i = 0; i < 80; i++) {
+                const p = document.createElement('div');
+                p.className = 'particle';
+                p.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                p.style.left = '50%'; p.style.top = '50%';
+                
+                const angle = Math.random() * Math.PI * 2;
+                const distance = Math.random() * 220 + 50; 
+                p.style.setProperty('--tx', `${Math.cos(angle) * distance}px`);
+                p.style.setProperty('--ty', `${Math.sin(angle) * distance}px`);
+                container.appendChild(p);
+            }
+        }
+
+        function startNewLap() {
+            document.getElementById('summit-modal').classList.remove('open');
+            playerPos = 1; laps++;
+            totalScore += 100; // Award Summit points securely here
+            document.getElementById('last-roll-text').innerText = `🚀 Lap ${laps} started! (+100⭐)`;
+            saveProgress(); renderBoard();
+        }
+
+        function saveProgress() {
+            localStorage.setItem('lt40_vocab', JSON.stringify(vocabDatabase));
+            localStorage.setItem('lt40_pos', playerPos);
+            localStorage.setItem('lt40_streak', streak);
+            localStorage.setItem('lt40_score', totalScore);
+            localStorage.setItem('lt40_laps', laps);
+            localStorage.setItem('lt40_hints', hintsOwned);
+            localStorage.setItem('lt40_shields', shieldsOwned);
+            localStorage.setItem('lt40_badges', JSON.stringify(badgesUnlocked));
+        }
+
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+            document.getElementById('bottom-bar').style.display = screenId === 'board-screen' ? 'flex' : 'none';
+            renderBoard();
+        }
+
+        function showProgressLog() {
+            const logList = document.getElementById('log-list');
+            logList.innerHTML = '';
+
+            let tRecog = 0, tRecogHits = 0, tRecall = 0, tRecallHits = 0, tMs = 0;
+
+            vocabDatabase.forEach(item => {
+                tRecog += (item.recogTries || 0); tRecogHits += (item.recogHits || 0);
+                tRecall += (item.recallTries || 0); tRecallHits += (item.recallHits || 0);
+                tMs += (item.totalMs || 0);
+
+                let tries = (item.recogTries || 0) + (item.recallTries || 0);
+                let avgSec = tries > 0 ? ((item.totalMs || 0) / tries / 1000).toFixed(1) + 's' : '-';
+
+                let statusText = "Recognition"; let bg = "#DBEAFE", col = "#1E40AF";
+                if (item.mastery === 1) { statusText = "Recall"; bg = "#FEF3C7"; col = "#92400E"; }
+                if (item.mastery >= 2) { statusText = "Mastered ✅"; bg = "#D1FAE5"; col = "#065F46"; }
+
+                logList.innerHTML += `
+                    <div style="display:flex; justify-content:space-between; align-items:center; padding:9px 0; border-bottom:1px solid #E5E7EB;">
+                        <div>
+                            <div style="font-weight:800; color:var(--primary); text-transform:capitalize;">${item.word}</div>
+                            <div style="font-size:11px; color:#6B7280;">Tier ${item.tier} • Errors: ${item.errors || 0} • Speed: ${avgSec}</div>
+                        </div>
+                        <span style="font-size:10px; padding:3px 7px; border-radius:10px; font-weight:700; background:${bg}; color:${col};">${statusText}</span>
+                    </div>
+                `;
+            });
+
+            const recogPct = tRecog > 0 ? Math.round((tRecogHits / tRecog) * 100) : 0;
+            const recallPct = tRecall > 0 ? Math.round((tRecallHits / tRecall) * 100) : 0;
+            const allTries = tRecog + tRecall;
+            const avgLatency = allTries > 0 ? (tMs / allTries / 1000).toFixed(1) : "0.0";
+            
+            document.getElementById('kpi-recog').innerText = `${recogPct}%`;
+            document.getElementById('kpi-recall').innerText = `${recallPct}%`;
+            document.getElementById('kpi-latency').innerText = `${avgLatency}s`;
+            document.getElementById('kpi-time').innerText = `${Math.floor(activeSeconds / 60)}m ${activeSeconds % 60}s`;
+
+            showScreen('log-screen');
+        }
+
+        function exportResearchCSV() {
+            let csv = "Student_ID,Word,Difficulty_Tier,Mastery_Stage,Total_Exposures,Recog_Attempts,Recog_Correct,Recall_Attempts,Recall_Correct,Total_Errors,Avg_Response_Time_Ms,Total_Time_On_Task_Sec\n";
+            vocabDatabase.forEach(item => {
+                let tries = (item.recogTries || 0) + (item.recallTries || 0);
+                let avgMs = tries > 0 ? Math.round((item.totalMs || 0) / tries) : 0;
+                csv += `"${studentName || 'Anon'}","${item.word}",${item.tier},${item.mastery},${tries},${item.recogTries || 0},${item.recogHits || 0},${item.recallTries || 0},${item.recallHits || 0},${item.errors || 0},${avgMs},${activeSeconds}\n`;
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a'); a.href = url; a.download = `LexiTrek_Data_${studentName || 'Student'}.csv`; a.click();
+        }
+
+        function copyReportForTeacher() {
+            const mastered = vocabDatabase.filter(i => i.mastery >= 2).length;
+            const report = `📊 *LexiTrek Student Report*\n👤 Student: ${studentName || 'Climber'} ${studentAvatar}\n🏔️ Summit Tile: ${playerPos}/30 (Lap ${laps})\n✅ Mastered: ${mastered}/15\n⭐ Score: ${totalScore} | 🔥 Streak: ${streak}\n⏱️ Time: ${Math.floor(activeSeconds / 60)} mins\n🎯 Receptive Acc: ${document.getElementById('kpi-recog').innerText}\n✍️ Productive Acc: ${document.getElementById('kpi-recall').innerText}\n⚡ Avg Speed: ${document.getElementById('kpi-latency').innerText}`;
+            navigator.clipboard.writeText(report).then(() => alert("✅ Report copied! Paste it into WhatsApp or Telegram.")).catch(() => prompt("Copy this report:", report));
+        }
+
+        function openProfileModal() { document.getElementById('student-name-input').value = studentName; document.getElementById('profile-modal').classList.add('open'); }
+        function selectAvatar(emoji, el) { studentAvatar = emoji; document.querySelectorAll('.avatar-opt').forEach(o => o.classList.remove('selected')); el.classList.add('selected'); }
+        function saveProfile() { studentName = document.getElementById('student-name-input').value.trim() || "Climber"; localStorage.setItem('lt40_name', studentName); localStorage.setItem('lt40_avatar', studentAvatar); document.getElementById('profile-modal').classList.remove('open'); renderBoard(); }
+        function resetProgress() { if (confirm("Reset all student analytics, climber position, and word mastery back to zero?")) { localStorage.clear(); location.reload(); } }
+
+        function playAudio() { if ('speechSynthesis' in window && currentCard) { const u = new SpeechSynthesisUtterance(currentCard.word); u.lang = 'en-GB'; window.speechSynthesis.speak(u); } }
+
+        function updateNetworkStatus() {
+            const dot = document.getElementById('net-dot'), txt = document.getElementById('net-text');
+            if (navigator.onLine) { dot.classList.remove('offline'); txt.innerText = "Online"; } else { dot.classList.add('offline'); txt.innerText = "Offline"; }
+        }
+        window.addEventListener('online', updateNetworkStatus); window.addEventListener('offline', updateNetworkStatus);
+
+        if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {}));
+        window.onload = () => { 
+            if (!studentName) openProfileModal(); 
+            renderBoard(); 
+            updateNetworkStatus(); 
+            checkSummit(); // Safety check on load in case they refreshed at the summit
+        };
+    </script>
+</body>
+</html>
