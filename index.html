@@ -183,7 +183,11 @@
                     <h2 id="zone-title">Zone 1: The Foothills</h2>
                     <p>Altitude: <span id="pos-display">1</span>/30 Tiles • Lap <span id="lap-display">1</span></p>
                 </div>
-                <button class="mini-btn" onclick="showProgressLog()">📊 Log</button>
+                <!-- Reset & Log Buttons -->
+                <div style="display: flex; gap: 6px;">
+                    <button class="mini-btn" onclick="resetProgress()" style="color: #DC2626; border-color: #FCA5A5; background: #FEF2F2;" title="Start a New Game">🔄 Reset</button>
+                    <button class="mini-btn" onclick="showProgressLog()">📊 Log</button>
+                </div>
             </div>
 
             <!-- Power-Up Gear Shop -->
@@ -396,7 +400,6 @@
         let totalScore = parseInt(localStorage.getItem('lt40_score')) || 20;
         let laps = parseInt(localStorage.getItem('lt40_laps')) || 1;
         
-        // Safety Catch: Ensure hints and shields never become NaN
         let storedHints = parseInt(localStorage.getItem('lt40_hints'));
         let hintsOwned = isNaN(storedHints) ? 1 : storedHints;
         let storedShields = parseInt(localStorage.getItem('lt40_shields'));
@@ -643,14 +646,13 @@
             } else {
                 document.getElementById('last-roll-text').innerText = `🛡️ Held position. Try again!`;
                 saveProgress(); renderBoard();
-                checkSummit(); // Safety Catch
+                checkSummit(); 
             }
         }
 
-        // The Summit Catcher: Securely fires fireworks if player hits or overshoots 30
         function checkSummit() {
             if (playerPos >= 30) {
-                playerPos = 30; // Securely lock at 30
+                playerPos = 30; 
                 document.getElementById('last-roll-text').innerText = `🏔️ Summit Reached!`;
                 saveProgress();
                 renderBoard();
@@ -661,7 +663,6 @@
         }
 
         function finalizeTileEvents() {
-            // First check if they hit the summit
             if (checkSummit()) return;
 
             let statusMsg = `🎲 Moved +${pendingMove} tiles!`;
@@ -670,7 +671,7 @@
                 playerPos = Math.min(30, playerPos + 2);
                 totalScore += 15; sfxCorrect();
                 statusMsg = `🌿 Vine Boost! +2 Extra Tiles!`;
-                if (checkSummit()) return; // Check again in case Vine pushed them to 30
+                if (checkSummit()) return; 
             } else if (campTiles.includes(playerPos)) {
                 totalScore += 20; sfxCorrect();
                 statusMsg = `⛺ Base Camp! +20 Bonus ⭐!`;
@@ -711,7 +712,7 @@
         function startNewLap() {
             document.getElementById('summit-modal').classList.remove('open');
             playerPos = 1; laps++;
-            totalScore += 100; // Award Summit points securely here
+            totalScore += 100; 
             document.getElementById('last-roll-text').innerText = `🚀 Lap ${laps} started! (+100⭐)`;
             saveProgress(); renderBoard();
         }
@@ -797,8 +798,44 @@
 
         function openProfileModal() { document.getElementById('student-name-input').value = studentName; document.getElementById('profile-modal').classList.add('open'); }
         function selectAvatar(emoji, el) { studentAvatar = emoji; document.querySelectorAll('.avatar-opt').forEach(o => o.classList.remove('selected')); el.classList.add('selected'); }
-        function saveProfile() {              const newName = document.getElementById('student-name-input').value.trim() || "Climber";             const oldName = localStorage.getItem('lt40_name');             const oldAvatar = localStorage.getItem('lt40_avatar');              // If a profile already exists and they change the name or avatar, trigger a complete reset             if (oldName && (newName !== oldName || studentAvatar !== oldAvatar)) {                 if (!confirm("⚠️ Are you sure? Changing your name or avatar will reset all scores, badges, and progress back to zero!")) {                     return; // Cancel if they clicked by mistake                 }                                  // Reset all game variables to default fresh start                 vocabDatabase = JSON.parse(JSON.stringify(defaultVocab));                 playerPos = 1;                 streak = 0;                 totalScore = 20; // Default starting stars                 laps = 1;                 hintsOwned = 1;                 shieldsOwned = 0;                 activeSeconds = 0;                 badgesUnlocked = [false, false, false, false, false];             }              // Save new profile             studentName = newName;             localStorage.setItem('lt40_name', studentName);              localStorage.setItem('lt40_avatar', studentAvatar);                           // Force save the reset progress and update the board             saveProgress();              document.getElementById('profile-modal').classList.remove('open');              renderBoard();          }
-        function resetProgress() { if (confirm("Reset all student analytics, climber position, and word mastery back to zero?")) { localStorage.clear(); location.reload(); } }
+        
+        // Save Profile Logic (Triggers Reset if Name/Avatar changes)
+        function saveProfile() { 
+            const newName = document.getElementById('student-name-input').value.trim() || "Climber";
+            const oldName = localStorage.getItem('lt40_name');
+            const oldAvatar = localStorage.getItem('lt40_avatar');
+
+            if (oldName && (newName !== oldName || studentAvatar !== oldAvatar)) {
+                if (!confirm("⚠️ Are you sure? Changing your name or avatar will reset all scores, badges, and progress back to zero!")) {
+                    return; 
+                }
+                
+                vocabDatabase = JSON.parse(JSON.stringify(defaultVocab));
+                playerPos = 1;
+                streak = 0;
+                totalScore = 20; 
+                laps = 1;
+                hintsOwned = 1;
+                shieldsOwned = 0;
+                activeSeconds = 0;
+                badgesUnlocked = [false, false, false, false, false];
+            }
+
+            studentName = newName;
+            localStorage.setItem('lt40_name', studentName); 
+            localStorage.setItem('lt40_avatar', studentAvatar); 
+            
+            saveProgress(); 
+            document.getElementById('profile-modal').classList.remove('open'); 
+            renderBoard(); 
+        }
+        
+        function resetProgress() { 
+            if (confirm("Start fresh? This will reset all student analytics, climber position, and word mastery back to zero.")) { 
+                localStorage.clear(); 
+                location.reload(); 
+            } 
+        }
 
         function playAudio() { if ('speechSynthesis' in window && currentCard) { const u = new SpeechSynthesisUtterance(currentCard.word); u.lang = 'en-GB'; window.speechSynthesis.speak(u); } }
 
@@ -813,7 +850,7 @@
             if (!studentName) openProfileModal(); 
             renderBoard(); 
             updateNetworkStatus(); 
-            checkSummit(); // Safety check on load in case they refreshed at the summit
+            checkSummit(); 
         };
     </script>
 </body>
